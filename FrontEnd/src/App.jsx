@@ -231,12 +231,7 @@ int main() { return 0; }`
   }
 
   const currentQ = questions[currentQuestion]
-  
-const formatInputForDisplay = (input) => {
-    if (!input) return ''
-    const parts = input.trim().split(/\s+/)
-    return parts.slice(1).join(' ')
-  }
+
   
 
   return (
@@ -255,7 +250,7 @@ const formatInputForDisplay = (input) => {
         <div className="flex flex-1 overflow-hidden">
           {/* ---------------------------------------------------------------------------------------- */}
           {/* Problem Description */}
-          <MainProblemDescription questions={questions} currentQuestion={currentQ} setCurrentQuestion={setCurrentQuestion} />
+          <MainProblemDescription currentQuestion={currentQ} />
 
           {/* ---------------------------------------------------------------------------------------- */}
           {/* Editor + Results */}

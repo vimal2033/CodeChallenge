@@ -1,6 +1,6 @@
                                               {/* Problem Description */}
 const MainProblemDescription = (props) => {
-    // const { questions, currentQuestion, setcurrentQuestion\} = props;
+    // const { currentQuestion} = props;
   return (
     <>
         <div className="w-1/3 border-r border-gray-700 flex flex-col bg-[#020617]/50 backdrop-blur-sm">

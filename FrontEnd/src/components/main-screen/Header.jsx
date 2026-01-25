@@ -20,7 +20,7 @@ const MainScreenHeader = (props) => {
                     <select
                         className="bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-2 backdrop-blur-sm hover:bg-gray-700/50 transition-all text-sm"
                         value={props.language}
-                        onChange={(e) => setLanguage(e.target.value)}
+                        onChange={(e) => props.setLanguage(e.target.value)}
                     >
                         <option value="cpp">C++</option>
                         <option value="python">Python</option>
@@ -29,7 +29,7 @@ const MainScreenHeader = (props) => {
                     </select>
 
                     <button
-                        onClick={() => setCodeTemplate(props.currentQ.languageTemplates[language] || props.currentQ.languageTemplates.cpp)}
+                        onClick={() => props.setCodeTemplate(props.currentQ.languageTemplates[language] || props.currentQ.languageTemplates.cpp)}
                         className="px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg hover:bg-gray-600/50 transition-all backdrop-blur-sm text-sm"
                     >
                         📋 Load Template

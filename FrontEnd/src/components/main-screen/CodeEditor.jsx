@@ -2,6 +2,7 @@
 import Editor from '@monaco-editor/react'
 const MainCodeEditor = (props) => {
     // const { currentQ, language, codeTemplate, setCodeTemplate } = props;
+    
   return (
     <>
         <div className="w-1/2 border-r border-gray-700 flex flex-col">
