@@ -1,24 +1,24 @@
                                                             {/* Header */}
 
-import React from 'react'
-
 const MainScreenHeader = (props) => {
-    // const { currentQ, language, setLanguage, setCodeTemplate, runTests, loading } = props
     return (
         <>
-            <header className="px-6 py-4 border-b border-gray-700 bg-[#020617]/80 backdrop-blur-sm flex justify-between items-center">
-                <div className="flex items-center gap-4">
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                        🧪 Online Compiler
-                    </h1>
-                    <div className="text-sm bg-blue-900/50 px-3 py-1 rounded-full font-mono">
-                        Q{props.currentQ.id}: {props.currentQ.title}
+            <header className="px-6 py-4 border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl flex justify-between items-center gap-4">
+                <div className="flex items-center gap-4 min-w-0">
+                    <div>
+                        <h1 className="text-xl font-semibold tracking-tight text-slate-50">
+                            Code Challenge Studio
+                        </h1>
+                        <p className="text-xs text-slate-400 mt-1">Clean editor, language runner, and instant feedback.</p>
+                    </div>
+                    <div className="hidden sm:inline-flex text-xs uppercase tracking-[0.2em] text-cyan-300 bg-cyan-400/10 border border-cyan-400/20 px-3 py-1.5 rounded-full">
+                        Q{props.currentQ.id} · {props.currentQ.title}
                     </div>
                 </div>
 
-                <div className="flex gap-3 items-center">
+                <div className="flex gap-3 items-center shrink-0">
                     <select
-                        className="bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-2 backdrop-blur-sm hover:bg-gray-700/50 transition-all text-sm"
+                        className="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-100 outline-none hover:border-slate-500 transition-colors"
                         value={props.language}
                         onChange={(e) => props.setLanguage(e.target.value)}
                     >
@@ -29,25 +29,33 @@ const MainScreenHeader = (props) => {
                     </select>
 
                     <button
-                        onClick={() => props.setCodeTemplate(props.currentQ.languageTemplates[language] || props.currentQ.languageTemplates.cpp)}
-                        className="px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg hover:bg-gray-600/50 transition-all backdrop-blur-sm text-sm"
+                        onClick={props.onResetCode}
+                        className="px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors text-sm text-slate-100"
                     >
-                        📋 Load Template
+                        Reset
+                    </button>
+
+                    <button
+                        onClick={props.runTests}
+                        disabled={props.loading}
+                        className="px-6 py-2 bg-slate-900 border border-cyan-700 text-cyan-300 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold rounded-lg transition-colors text-sm"
+                    >
+                        Submit
                     </button>
 
                     <button
                         id="run-btn"
                         onClick={props.runTests}
                         disabled={props.loading}
-                        className="px-8 py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:opacity-50 disabled:cursor-not-allowed font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all backdrop-blur-sm flex items-center gap-2 text-sm"
+                        className="px-8 py-2 bg-cyan-500 text-slate-950 hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed font-semibold rounded-lg transition-colors flex items-center gap-2 text-sm"
                     >
                         {props.loading ? (
                             <>
-                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin" />
                                 Running...
                             </>
                         ) : (
-                            '🚀 Run Tests'
+                            'Run Tests'
                         )}
                     </button>
                 </div>

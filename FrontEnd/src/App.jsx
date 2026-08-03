@@ -14,56 +14,36 @@ function App() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const q = questions[currentQuestion]
-    const template = q.languageTemplates[language] || q.languageTemplates.cpp
-    setCodeTemplate(template)
+    setCodeTemplate('')
   }, [currentQuestion, language])
 
-  const generateSourceCode = () => {
-    const q = questions[currentQuestion]
-    const funcName = q.functionName
+  const resetCodeTemplate = () => {
+    setCodeTemplate('')
+  }
 
-    const cppFuncMap = {
-      'square': 'square',
-      'isEven': 'isEven',
-      'factorial': 'factorial',
-      'isPrime': 'isPrime',
-      'fibonacci': 'fibonacci',
-      'sumOfDigits': 'sumOfDigits',
-      'reverseNumber': 'reverseNumber',
-      'isPalindrome': 'isPalindrome',
-      'gcd': 'gcd',
-      'isPowerOfTwo': 'isPowerOfTwo'
-    }
+  const generateSourceCode = () => {
+    return codeTemplate
+  }
+
+  const generateRunnableSource = () => {
+    const currentFunctionName = questions[currentQuestion].functionName
 
     if (language === 'cpp') {
-      const cppFunc = cppFuncMap[funcName] || funcName
-      return `#include <iostream>
-#include <vector>
-#include <sstream>
+      return `#include <bits/stdc++.h>
 using namespace std;
 
 ${codeTemplate}
 
 int main() {
-  string allInput;
-  string line;
-  while(getline(cin, line)) {
-    allInput += line + "\\n";
-  }
-  
-  stringstream ss(allInput);
-  vector<int> numbers;
-  int num;
-  while(ss >> num) {
-    numbers.push_back(num);
-  }
-  
-  if(numbers.empty()) return 0;
-  int t = numbers[0];
-  
-  for(size_t i = 1; i <= t && i < numbers.size(); i++) {
-    cout << ${cppFunc}(numbers[i]) << endl;
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+
+  int t;
+  if (!(cin >> t)) return 0;
+  while (t--) {
+    long long n;
+    cin >> n;
+    ${currentFunctionName}(n);
   }
   return 0;
 }`
@@ -73,6 +53,7 @@ int main() {
       return `${codeTemplate}
 
 import sys
+
 data = sys.stdin.read().split()
 if data:
   t = int(data[0])
@@ -81,7 +62,7 @@ if data:
     if index < len(data):
       n = int(data[index])
       index += 1
-      print(${funcName}(n))`
+      ${currentFunctionName}(n)`
     }
 
     if (language === 'node') {
@@ -89,37 +70,36 @@ if data:
 
 ${codeTemplate}
 
-const input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);
+const input = fs.readFileSync(0, 'utf8').trim().split(/\s+/);
 if (input.length > 0) {
   let index = 0;
   const t = parseInt(input[index++]);
-  for(let i = 0; i < t && index < input.length; i++) {
+  for (let i = 0; i < t && index < input.length; i++) {
     const n = parseInt(input[index++]);
-    console.log(${funcName}(n));
+    ${currentFunctionName}(n);
   }
 }`
     }
 
     if (language === 'java') {
       return `import java.util.*;
+
 public class Main {
   ${codeTemplate}
-  
+
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
     int t = sc.nextInt();
-    for(int i = 0; i < t; i++) {
+    for (int i = 0; i < t; i++) {
       int n = sc.nextInt();
-      System.out.println(${funcName}(n));
+      ${currentFunctionName}(n);
     }
     sc.close();
   }
 }`
     }
 
-    return `#include <iostream>
-using namespace std;
-int main() { return 0; }`
+    return codeTemplate
   }
 
   const runTests = async () => {
@@ -144,7 +124,7 @@ int main() { return 0; }`
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           language,
-          source: generateSourceCode(),
+          source: generateRunnableSource(),
           input: firstTest.input
         })
       })
@@ -182,7 +162,7 @@ int main() { return 0; }`
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             language,
-            source: generateSourceCode(),
+            source: generateRunnableSource(),
             input: tests[i].input
           })
         })
@@ -235,33 +215,22 @@ int main() { return 0; }`
   
 
   return (
-    <div className="h-screen bg-[#0f172a] text-gray-200 flex flex-col font-mono">
-      {/* --------------------------------------------------------------------------------- */}
-      {/* Header */}
-      <MainScreenHeader currentQ={currentQ} language={language} setLanguage={setLanguage} setCodeTemplate={setCodeTemplate} runTests={runTests} loading={loading} />
-      {/* --------------------------------------------------------------------------------- */}
-      {/* Main Layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* ----------------------------------------------------------------------------------------- */}
-        {/* Questions Sidebar */}
-        <MainQuestionsSidebar questions={questions} currentQuestion={currentQ} setCurrentQuestion={setCurrentQuestion} />
-        {/* ------------------------------------------------------------------------------------------- */}
-        {/* Content Area */}
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+      <MainScreenHeader
+        currentQ={currentQ}
+        language={language}
+        setLanguage={setLanguage}
+        onResetCode={resetCodeTemplate}
+        runTests={runTests}
+        loading={loading}
+      />
+      <div className="flex flex-1 overflow-hidden border-t border-slate-800/80">
+        <MainQuestionsSidebar questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion} />
         <div className="flex flex-1 overflow-hidden">
-          {/* ---------------------------------------------------------------------------------------- */}
-          {/* Problem Description */}
           <MainProblemDescription currentQuestion={currentQ} />
-
-          {/* ---------------------------------------------------------------------------------------- */}
-          {/* Editor + Results */}
           <div className="flex-1 flex overflow-hidden">
-            {/* -------------------------------------------------------------------------------------------- */}
-            {/* Code Editor */}
             <MainCodeEditor currentQ={currentQ} language={language} codeTemplate={codeTemplate} setCodeTemplate={setCodeTemplate} />
-            {/* ----------------------------------------------------------------------------- */}
-            {/* Test Results */}
             <MainTestResult currentQ={currentQ} results={results} />
-            {/* ---------------------------------------------------------------------------------------- */}
           </div>
         </div>
       </div>
